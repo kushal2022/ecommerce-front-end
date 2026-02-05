@@ -64,62 +64,96 @@ const Filter = ({ categories }) => {
     };
 
     return (
-        <div className="flex lg:flex-row flex-col-reverse lg:justify-between justify-center items-center gap-4">
-            {/* SEARCH BAR */}
-            <div className="relative flex items-center 2xl:w-[450px] sm:w-[420px] w-full">
-                <input 
-                    type="text"
-                    placeholder="Search Products"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="border border-gray-400 text-slate-800 rounded-md py-2 pl-10 pr-4 w-full focus:outline-hidden focus:ring-2 focus:ring-[#1976d2]"/>
-                <FiSearch className="absolute left-3 text-slate-800 size={20}"/>
+        <div className="space-y-6">
+            {/* SEARCH */}
+            <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
+                <div className="relative">
+                    <FiSearch className="absolute left-3 top-3.5 text-slate-400" size={18} />
+                    <input 
+                        type="text"
+                        placeholder="Search products..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full border border-slate-300 text-slate-800 rounded-md py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                </div>
             </div>
 
-            {/* CATEGORY SELECTION */}
-            <div className="flex sm:flex-row flex-col gap-4 items-center">
-                <FormControl
-                    className="text-slate-800 border-slate-700"
-                    variant="outlined"
-                    size="small">
-                        <InputLabel id="category-select-label">Category</InputLabel>
-                        <Select
-                            labelId="category-select-label"
-                            value={category}
-                            onChange={handleCategoryChange}
-                            label="Category"
-                            className="min-w-[120px] text-slate-800 border-slate-700"
-                         >
-                            <MenuItem value="all">All</MenuItem>
-                            {categories.map((item) => (
-                                <MenuItem key={item.categoryId} value={item.categoryName}>
-                                    {item.categoryName}
-                                </MenuItem>
-                            ))}
-                         </Select>
-                </FormControl>
+            {/* CATEGORIES */}
+            <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
+                <h3 className="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wide">Categories</h3>
+                <div className="space-y-1">
+                    <button 
+                        onClick={() => { params.delete('category'); navigate(`${pathname}?${params}`); setCategory('all'); }}
+                        className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                            category === 'all' 
+                                ? 'bg-blue-500 text-white font-medium' 
+                                : 'text-slate-700 hover:bg-slate-100'
+                        }`}
+                    >
+                        All Products
+                    </button>
+                    {categories && categories.map((item) => (
+                        <button 
+                            key={item.categoryId}
+                            onClick={() => { params.set('category', item.categoryName); navigate(`${pathname}?${params}`); setCategory(item.categoryName); }}
+                            className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                                category === item.categoryName 
+                                    ? 'bg-blue-500 text-white font-medium' 
+                                    : 'text-slate-700 hover:bg-slate-100'
+                            }`}
+                        >
+                            {item.categoryName}
+                        </button>
+                    ))}
+                </div>
+            </div>
 
-                {/* SORT BUTTON & CLEAR FILTER */}
-                <Tooltip title="Sorted by price: asc">
-                    <Button variant="contained" 
-                        onClick={toggleSortOrder}
-                        color="primary" 
-                        className="flex items-center gap-2 h-10">
-                        Sort By
-                        {sortOrder === "asc" ? (
-                            <FiArrowUp size={20} />
-                        ) : (
-                            <FiArrowDown size={20} />
-                        )}
-                        
-                    </Button>
-                </Tooltip>
+            {/* PRICE RANGE */}
+            <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
+                <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wide">Price</h3>
+                <div className="space-y-4">
+                    <input 
+                        type="range" 
+                        min="0" 
+                        max="5000" 
+                        defaultValue="5000"
+                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                    />
+                    <div className="flex justify-between text-xs font-semibold text-slate-600">
+                        <span>$0</span>
+                        <span>$5000+</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* AVAILABILITY */}
+            <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
+                <h3 className="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wide">Stock</h3>
+                <label className="flex items-center gap-3 cursor-pointer">
+                    <input 
+                        type="checkbox" 
+                        className="w-5 h-5 rounded border-slate-300 text-blue-500 cursor-pointer"
+                    />
+                    <span className="text-sm text-slate-700">In Stock Only</span>
+                </label>
+            </div>
+
+            {/* ACTIONS */}
+            <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-sm flex gap-2">
                 <button 
-                className="flex items-center gap-2 bg-rose-900 text-white px-3 py-2 rounded-md transition duration-300 ease-in shadow-md focus:outline-hidden"
-                onClick={handleClearFilters}
+                    className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2.5 rounded-md font-medium text-sm transition-colors"
+                    onClick={toggleSortOrder}
                 >
-                    <FiRefreshCw className="font-semibold" size={16}/>
-                    <span className="font-semibold">Clear Filter</span>
+                    {sortOrder === "asc" ? <FiArrowUp className="inline mr-1" size={16} /> : <FiArrowDown className="inline mr-1" size={16} />}
+                    Sort
+                </button>
+                <button 
+                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2.5 rounded-md font-medium text-sm transition-colors flex items-center justify-center gap-2"
+                    onClick={handleClearFilters}
+                >
+                    <FiRefreshCw size={16} />
+                    Reset
                 </button>
             </div>
         </div>

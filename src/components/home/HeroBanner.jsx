@@ -13,7 +13,11 @@ import { Autoplay, Pagination, EffectFade, Navigation } from 'swiper/modules';
 import { bannerLists } from '../../utils';
 import { Link } from 'react-router-dom';
 
-const colors = ["bg-banner-color1", "bg-banner-color2", "bg-banner-color3"];
+const colors = [
+    "bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600",
+    "bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-700",
+    "bg-gradient-to-r from-orange-500 via-red-500 to-pink-600"
+];
 
 const HeroBanner = () => {
     return (
@@ -32,33 +36,33 @@ const HeroBanner = () => {
 
                     {bannerLists.map((item, i) => (
                         <SwiperSlide key={item.id}>
-                            <div className={`carousel-item rounded-md sm:h-[500px] h-96 ${colors[i]}`}>
-                                <div className='flex items-center justify-center'>
+                            <div className={`carousel-item rounded-2xl sm:h-[500px] h-96 ${colors[i]} flex items-center justify-center shadow-2xl`}>
+                                <div className='flex items-center justify-center w-full'>
                                     <div className='hidden lg:flex justify-center w-1/2 p-8'>
                                     <div className='text-center'>
-                                        <h3 className='text-3xl text-white font-bold'>
+                                        <h3 className='text-2xl text-white text-opacity-80 font-semibold tracking-wide'>
                                             {item.title}
                                         </h3>
-                                        <h1 className='text-5xl text-white font-bold mt-2'>
+                                        <h1 className='text-6xl text-white font-black mt-4 drop-shadow-lg'>
                                             {item.subtitle}
                                         </h1>
-                                        <p className='text-white font-bold mt-4'>
+                                        <p className='text-white text-opacity-90 font-semibold mt-6 text-lg drop-shadow'>
                                             {item.description}
                                         </p>
                                         <Link 
-                                            className='mt-6 inline-block bg-black text-white py-2 px-4 rounded-sm hover:bg-gray-800'
+                                            className='mt-8 inline-block bg-white text-slate-900 py-3 px-8 rounded-lg hover:bg-slate-100 font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105'
                                             to="/products">
-                                        Shop
+                                        Shop Now →
                                         </Link>
                                     </div>
                                 </div>
                                 <div className='w-full flex justify-center lg:w-1/2 p-4'>
-                                    <img src={item?.image}></img>
+                                    <img src={item?.image} className='drop-shadow-2xl transform hover:scale-110 transition-transform duration-500'></img>
                                 </div>
                                 </div>
                             </div>
                         </SwiperSlide>
-                    ))}
+                    ))}}
             </Swiper>
         </div>
     );

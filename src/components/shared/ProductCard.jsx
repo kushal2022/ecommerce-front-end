@@ -35,87 +35,109 @@ const ProductCard = ({
     };
 
     return (
-        <div className="border rounded-lg shadow-xl overflow-hidden transition-shadow duration-300">
-            <div onClick={() => {
-                handleProductView({
-                    id: productId,
-                    productName,
-                    image,
-                    description,
-                    quantity,
-                    price,
-                    discount,
-                    specialPrice,
-                })
-            }} 
-                    className="w-full overflow-hidden aspect-3/2">
+        <div className="group bg-white rounded-lg border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300 overflow-hidden">
+            {/* IMAGE */}
+            <div className="relative w-full overflow-hidden bg-slate-100 aspect-square">
                 <img 
-                className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105"
-                src={image}
-                alt={productName}>
-                </img>
+                    className="w-full h-full cursor-pointer transition-transform duration-500 group-hover:scale-110"
+                    onClick={() => {
+                        handleProductView({
+                            id: productId,
+                            productName,
+                            image,
+                            description,
+                            quantity,
+                            price,
+                            discount,
+                            specialPrice,
+                        })
+                    }}
+                    src={image}
+                    alt={productName}
+                />
+                {discount && (
+                    <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                        -{Math.round(discount)}%
+                    </div>
+                )}
+                {!isAvailable && (
+                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span className="bg-red-600 text-white px-4 py-2 rounded-md font-semibold">Out of Stock</span>
+                    </div>
+                )}
             </div>
+
+            {/* CONTENT */}
             <div className="p-4">
-                <h2 onClick={() => {
-                handleProductView({
-                    id: productId,
-                    productName,
-                    image,
-                    description,
-                    quantity,
-                    price,
-                    discount,
-                    specialPrice,
-                })
-            }}
-                    className="text-lg font-semibold mb-2 cursor-pointer">
+                <h2 
+                    onClick={() => {
+                        handleProductView({
+                            id: productId,
+                            productName,
+                            image,
+                            description,
+                            quantity,
+                            price,
+                            discount,
+                            specialPrice,
+                        })
+                    }}
+                    className="text-sm font-semibold mb-1 cursor-pointer text-slate-900 hover:text-blue-600 line-clamp-2 transition-colors"
+                >
                     {truncateText(productName, 50)}
                 </h2>
                 
-                <div className="min-h-20 max-h-20">
-                    <p className="text-gray-600 text-sm">
+                <div className="mb-3 h-8">
+                    <p className="text-slate-600 text-xs line-clamp-2">
                         {truncateText(description, 80)}
                     </p>
                 </div>
 
-            { !about && (
-                <div className="flex items-center justify-between">
-                {specialPrice ? (
-                    <div className="flex flex-col">
-                        <span className="text-gray-400 line-through">
-                            ${Number(price).toFixed(2)}
-                        </span>
-                        <span className="text-xl font-bold text-slate-700">
-                            ${Number(specialPrice).toFixed(2)}
-                        </span>
-                    </div>
-                ) : (
-                    <span className="text-xl font-bold text-slate-700">
-                        {"  "}
-                        ${Number(price).toFixed(2)}
-                    </span>
-                )}
+                {!about && (
+                    <div>
+                        {/* PRICE */}
+                        <div className="mb-3">
+                            {specialPrice ? (
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-lg font-bold text-slate-900">
+                                        ${Number(specialPrice).toFixed(2)}
+                                    </span>
+                                    <span className="text-xs text-slate-400 line-through">
+                                        ${Number(price).toFixed(2)}
+                                    </span>
+                                </div>
+                            ) : (
+                                <span className="text-lg font-bold text-slate-900">
+                                    ${Number(price).toFixed(2)}
+                                </span>
+                            )}
+                        </div>
 
-                <button
-                    disabled={!isAvailable || btnLoader}
-                    onClick={() => addToCartHandler({
-                        image,
-                        productName,
-                        description,
-                        specialPrice,
-                        price,
-                        productId,
-                        quantity,
-                    })}
-                    className={`bg-blue-500 ${isAvailable ? "opacity-100 hover:bg-blue-600" : "opacity-70"}
-                        text-white py-2 px-3 rounded-lg items-center transition-colors duration-300 w-36 flex justify-center`}>
-                    <FaShoppingCart className="mr-2"/>
-                    {isAvailable ? "Add to Cart" : "Stock Out"}
-                </button>
-                </div>
-            )}
-                
+                        {/* BUTTON */}
+                        <button
+                            disabled={!isAvailable || btnLoader}
+                            onClick={() => addToCartHandler({
+                                image,
+                                productName,
+                                description,
+                                specialPrice,
+                                price,
+                                productId,
+                                quantity,
+                            })}
+                            className={`w-full py-2 px-3 rounded-lg font-medium text-sm flex justify-center items-center gap-2 transition-all ${
+                                isAvailable 
+                                    ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-md hover:shadow-lg' 
+                                    : 'bg-slate-200 text-slate-500 cursor-not-allowed'
+                            }`}
+                        >
+                            <FaShoppingCart size={14} />
+                            {isAvailable ? "Add" : "Out"}
+                        </button>
+                    </div>
+                )}
             </div>
+
             <ProductViewModal 
                 open={openProductViewModal}
                 setOpen={setOpenProductViewModal}
